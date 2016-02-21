@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TuneTris</title>
+  <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #000;
+  }
+  .pitch-debug {
+    position: fixed;
+    color: #fff;
+    margin: 1em 2em;
+  }
+  .wave-form-debug {
+    position: fixed;
+    right: 0;
+  }
+  .pitch-visualiser {
+    position: fixed;
+    color: #fff;
+    font-size: 4em;
+    margin: auto;
+    text-align: center;
+    width: 100px;
+    left: 50%;
+    margin-left: -50px;
+    top: 50%;
+    margin-top: -37px;
+  }
+  </style>
+</head>
+<body>
+  <script src="http://localhost:8080/webpack-dev-server.js"></script>
+  <script src="vendor.bundle.js"></script>
+  <script src="bundle.js"></script>
+</body>
+</html>
