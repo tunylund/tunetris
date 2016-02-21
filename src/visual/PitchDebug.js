@@ -1,35 +1,20 @@
-var three = require('three')
-
-var clock = new three.Clock(true)
-var timeScale = 1
-var tick = 0
-
-function PitchVisualiser () {
+function PitchDebug (document) {
   this.el = document.createElement('pre')
+  document.body.appendChild(this.el)
   this.el.className = 'pitch-debug'
-  this.data = {
-    pitch: '',
-    noteNumber: 0,
-    noteName: '',
-    offset: 0
-  }
 }
 
-PitchVisualiser.prototype.setData = function (data) {
+PitchDebug.prototype.destroy = function () {
+  this.el.parentNode.removeChild(this.el)
+  this.el = this.data = null
+}
+
+PitchDebug.prototype.setData = function (data) {
   this.data = data
 }
 
-PitchVisualiser.prototype.step = function () {
-  var delta = clock.getDelta() * timeScale
-  tick += delta
-
-  if (tick < 0) tick = 0
-
-  if (delta > 0) {
-    this.data.delta = delta
-    this.data.tick = tick
-    this.el.innerHTML = JSON.stringify(this.data, null, 2)
-  }
+PitchDebug.prototype.step = function () {
+  if (this.data) this.el.innerHTML = JSON.stringify(this.data, null, 2)
 }
 
-module.exports = PitchVisualiser
+module.exports = PitchDebug

@@ -1,6 +1,5 @@
 var three = require('three')
 
-var clock = new three.Clock(true)
 var timeScale = 1
 var tick = 0
 
@@ -32,6 +31,12 @@ function TravellingLight (x, y, min, max) {
   this.light.target.position.set(x, y, 0)
 }
 
+TravellingLight.prototype.destroy = function () {
+  this.light.parent.remove(this.light.target)
+  this.light.parent.remove(this.light)
+  this.light = null
+}
+
 TravellingLight.prototype.step = function (delta) {
   this.light.position.x = this.light.nextX(Math.log(this.light.position.x + 1) * delta)
   this.light.position.y = this.light.nextY(delta)
@@ -40,8 +45,9 @@ TravellingLight.prototype.step = function (delta) {
 }
 
 function Scene (map) {
-
   this.scene = new three.Scene()
+
+  this.clock = new three.Clock(true)
 
   this.ambient = new three.HemisphereLight(0xffffff, 0x080808, 1)
   this.scene.add(this.ambient)
@@ -55,14 +61,22 @@ function Scene (map) {
   this.scene.add(this.blight.light.target)
 }
 
+Scene.prototype.destroy = function () {
+  this.alight.destroy()
+  this.blight.destroy()
+  this.ambient.parent.remove(this.ambient)
+  this.clock.stop()
+  this.alight = this.blight = this.ambient = this.scene = this.clock = null
+}
+
 Scene.prototype.step = function () {
-  var delta = clock.getDelta() * timeScale
+  var delta = this.clock.getDelta() * timeScale
   tick += delta
 
   if (tick < 0) tick = 0
 
   this.alight.step(delta)
-
+  this.blight.step(delta)
 }
 
 module.exports = Scene

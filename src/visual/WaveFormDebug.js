@@ -1,15 +1,23 @@
-function WaveFormDebug (audioContext, audioSource) {
+function WaveFormDebug (audioContext, audioSource, document) {
   this.el = document.createElement('canvas')
   this.el.width = 256
   this.el.height = 124
   this.el.className = 'wave-form-debug'
   this.context = this.el.getContext('2d')
+  document.body.appendChild(this.el)
 
+  // workaround chrome garbage collection issue
   window.__pc = this.analyser = audioContext.createAnalyser()
   this.analyser.fftSize = 2048
   this.bufferLength = this.analyser.frequencyBinCount
   this.data = new Float32Array(this.bufferLength)
   audioSource.connect(this.analyser)
+}
+
+WaveFormDebug.prototype.destroy = function () {
+  this.el.parentNode.removeChild(this.el)
+  this.analyser.disconnect()
+  window.__pc = this.analyser = this.el = this.data = this.context = null
 }
 
 WaveFormDebug.prototype.step = function () {

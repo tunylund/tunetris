@@ -6,24 +6,26 @@ var timeScale = 1
 var requiredNoteLength = 1
 var feather = 20
 
-function sum (memo, value) {
-  return (memo || 0) + value
-}
-
 function CleanNoteDetector () {
   EventEmitter.call(this)
   this.clock = new three.Clock(true)
   this.tick = 0
   this.noteDetected = false
-  this.detectStack = []
+  this.detectLength = 0
 }
 util.inherits(CleanNoteDetector, EventEmitter)
+
+CleanNoteDetector.prototype.destroy = function () {
+  this.removeAllListeners()
+  this.clock.stop()
+  this.clock = this.data = null
+}
 
 CleanNoteDetector.prototype.setData = function (data) {
   if (this.data && this.data.noteName !== data.noteName) {
     this.tick = 0
     this.noteDetected = false
-    this.detectStack = []
+    this.detectLength = 0
   }
   this.data = data
 }
@@ -37,12 +39,12 @@ CleanNoteDetector.prototype.step = function () {
   if (delta > 0 && this.data.pitch) {
 
     if (Math.abs(this.data.offset) < feather) {
-      this.detectStack.push(delta)
+      this.detectLength += delta
     }
 
     if (this.tick > requiredNoteLength && !this.noteDetected) {
 
-      if (this.detectStack.reduce(sum, 0) > requiredNoteLength) {
+      if (this.detectLength > requiredNoteLength) {
         this.emit('cleanNote', this.data)
         this.noteDetected = true
       }

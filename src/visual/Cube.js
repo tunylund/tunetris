@@ -1,6 +1,5 @@
 var three = require('three')
-
-const noteStrings = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+var noteStrings = require('./../audio/consts').noteStrings
 
 function dir () {
   return Math.random() > 0.5 ? 1 : -1
@@ -20,6 +19,12 @@ function Cube (note, position) {
   this.mesh.position.x = position.x
   this.mesh.position.y = position.y
   this.mesh.position.z = position.z
+}
+
+Cube.prototype.destroy = function () {
+  clearTimeout(this.revertTimeout)
+  this.mesh.parent.remove(this.mesh)
+  this.note = this.position = this.mesh = null
 }
 
 Cube.prototype.provoke = function () {

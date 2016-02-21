@@ -1,14 +1,10 @@
 var three = require('three')
+var noteStrings = require('./../audio/consts').noteStrings
 
-var clock = new three.Clock(true)
-var timeScale = 1
-var tick = 0
 var width = 5
 var width2 = width / 2
 
-var noteStrings = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-
-function PitchVisualiser (scene, map) {
+function PitchVisualiser (scene, map, document) {
 
   var geometry = new three.Geometry()
   for (var i = 0; i < 11; i++) {
@@ -28,7 +24,6 @@ function PitchVisualiser (scene, map) {
   this.line.position.y = map.data.length / 2
   this.line.position.z = 2
   scene.add(this.line)
-  window.l = this.line
 
   this.light = new three.SpotLight(0xffffff, 1, 100)
   this.light.position.x = map.data[0].length / 2
@@ -40,6 +35,7 @@ function PitchVisualiser (scene, map) {
 
   this.el = document.createElement('div')
   this.el.className = 'pitch-visualiser'
+  document.body.appendChild(this.el)
 
   this.data = {
     pitch: '',
@@ -50,6 +46,14 @@ function PitchVisualiser (scene, map) {
 
 }
 
+PitchVisualiser.prototype.destroy = function () {
+  this.el.parentNode.removeChild(this.el)
+  this.line.parent.remove(this.line)
+  this.light.parent.remove(this.light.target)
+  this.light.parent.remove(this.light)
+  this.el = this.data = this.light = this.line = null
+}
+
 PitchVisualiser.prototype.setData = function (data) {
   if (this.data.noteName !== data.noteName) {
     this.el.innerHTML = data.noteName || ''
@@ -58,22 +62,12 @@ PitchVisualiser.prototype.setData = function (data) {
 }
 
 PitchVisualiser.prototype.step = function () {
-  var delta = clock.getDelta() * timeScale
-  tick += delta
-
-  if (tick < 0) tick = 0
-
-  if (delta > 0) {
-    this.data.delta = delta
-    this.data.tick = tick
-  }
-
   var tone = (noteStrings.indexOf(this.data.noteName) + 1) / noteStrings.length
   var color = new three.Color().setHSL(tone, 1, 0.75)
   this.light.color = color
 
   var offset = this.data.offset / 40
-  var v, c, i, x, weight
+  var v, c, i, weight
 
   for (i = 0; i < this.line.geometry.vertices.length; i++) {
     v = this.line.geometry.vertices[i]

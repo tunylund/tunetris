@@ -98,14 +98,15 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
+	__webpack_require__(2);
 	__webpack_require__(7);
 	__webpack_require__(8);
-	module.exports = __webpack_require__(15);
+	module.exports = __webpack_require__(17);
 
 
 /***/ },
-/* 1 */
+/* 1 */,
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -40679,7 +40680,6 @@
 
 
 /***/ },
-/* 2 */,
 /* 3 */,
 /* 4 */,
 /* 5 */,
@@ -41721,17 +41721,19 @@
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
 
-	var bits = __webpack_require__(16)
-	var pool = __webpack_require__(17)
-	var ndarray = __webpack_require__(23)
-	var ops = __webpack_require__(26)
-	var fft = __webpack_require__(31)
-	var hann = __webpack_require__(33)
+	var bits = __webpack_require__(18)
+	var pool = __webpack_require__(19)
+	var ndarray = __webpack_require__(25)
+	var ops = __webpack_require__(28)
+	var fft = __webpack_require__(33)
+	var hann = __webpack_require__(35)
 
 	function square(x, y) {
 	  var n = x.length
@@ -41853,7 +41855,7 @@
 
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports) {
 
 	/**
@@ -42063,13 +42065,13 @@
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, Buffer) {'use strict'
 
-	var bits = __webpack_require__(16)
-	var dup = __webpack_require__(22)
+	var bits = __webpack_require__(18)
+	var dup = __webpack_require__(24)
 
 	//Legacy pool support
 	if(!global.__TYPEDARRAY_POOL) {
@@ -42280,10 +42282,10 @@
 	    BUFFER[i].length = 0
 	  }
 	}
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(18).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(20).Buffer))
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
@@ -42296,9 +42298,9 @@
 
 	'use strict'
 
-	var base64 = __webpack_require__(19)
-	var ieee754 = __webpack_require__(20)
-	var isArray = __webpack_require__(21)
+	var base64 = __webpack_require__(21)
+	var ieee754 = __webpack_require__(22)
+	var isArray = __webpack_require__(23)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -43835,10 +43837,10 @@
 	  return i
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18).Buffer, (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20).Buffer, (function() { return this; }())))
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -43968,7 +43970,7 @@
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -44058,7 +44060,7 @@
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports) {
 
 	var toString = {}.toString;
@@ -44069,7 +44071,7 @@
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -44123,11 +44125,11 @@
 	module.exports = dupe
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var iota = __webpack_require__(24)
-	var isBuffer = __webpack_require__(25)
+	var iota = __webpack_require__(26)
+	var isBuffer = __webpack_require__(27)
 
 	var hasTypedArrays  = ((typeof Float64Array) !== "undefined")
 
@@ -44472,7 +44474,7 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -44488,7 +44490,7 @@
 	module.exports = iota
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	/**
@@ -44511,12 +44513,12 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
 
-	var compile = __webpack_require__(27)
+	var compile = __webpack_require__(29)
 
 	var EmptyProc = {
 	  body: "",
@@ -44978,12 +44980,12 @@
 
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
 
-	var createThunk = __webpack_require__(28)
+	var createThunk = __webpack_require__(30)
 
 	function Procedure() {
 	  this.argTypes = []
@@ -45093,7 +45095,7 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
@@ -45121,7 +45123,7 @@
 	//   return thunk(compile.bind1(proc))
 	// }
 
-	var compile = __webpack_require__(29)
+	var compile = __webpack_require__(31)
 
 	function createThunk(proc) {
 	  var code = ["'use strict'", "var CACHED={}"]
@@ -45185,12 +45187,12 @@
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict"
 
-	var uniq = __webpack_require__(30)
+	var uniq = __webpack_require__(32)
 
 	// This function generates very simple loops analogous to how you typically traverse arrays (the outermost loop corresponds to the slowest changing index, the innermost loop to the fastest changing index)
 	// TODO: If two arrays have the same strides (and offsets) there is potential for decreasing the number of "pointers" and related variables. The drawback is that the type signature would become more specific and that there would thus be less potential for caching, but it might still be worth it, especially when dealing with large numbers of arguments.
@@ -45545,7 +45547,7 @@
 
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports) {
 
 	"use strict"
@@ -45608,15 +45610,15 @@
 
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
 
-	var ops = __webpack_require__(26)
-	var ndarray = __webpack_require__(23)
-	var pool = __webpack_require__(17)
-	var fftm = __webpack_require__(32)
+	var ops = __webpack_require__(28)
+	var ndarray = __webpack_require__(25)
+	var pool = __webpack_require__(19)
+	var fftm = __webpack_require__(34)
 
 	function ndfft(dir, x, y) {
 	  var shape = x.shape
@@ -45695,10 +45697,10 @@
 	module.exports = ndfft
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bits = __webpack_require__(16)
+	var bits = __webpack_require__(18)
 
 	function fft(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
 	  dir |= 0
@@ -45918,7 +45920,7 @@
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports) {
 
 	'use strict'

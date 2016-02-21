@@ -8,7 +8,10 @@ module.exports = function (audioContext) {
     source.frequency.value = source.frequency.value % 2000
   }
 
-  setInterval(update, 500)
+  var interval = setInterval(update, 500)
+  source.addEventListener('ended', function () {
+    clearInterval(interval)
+  })
 
   return Promise.resolve(source)
 

@@ -1,6 +1,5 @@
 var Cube = require('./Cube')
-
-var noteStrings = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+var noteStrings = require('./../audio/consts').noteStrings
 
 function random (arr) {
   return arr[Math.floor(Math.random() * arr.length)]
@@ -23,11 +22,19 @@ function Map (w, h, tileSize) {
   }
 
   this.data = map
+  this.cubes = []
   this.itemsByNoteName = {}
   this.itemsByNoteNumber = {}
 }
 
 Map.prototype = {
+
+  destroy: function () {
+    this.cubes.map(function (cube) {
+      cube.destroy()
+    })
+    this.data = this.last = this.itemsByNoteNumber = this.itemsByNoteName = this.cubes = null
+  },
 
   addCube: function (note) {
     var pos = this.anyFree(note)
@@ -62,9 +69,12 @@ Map.prototype = {
   },
 
   anyFree: function (note) {
-    var similarNote = random(this.itemsByNoteName[note.noteName] || [])
-    var adj
-    if (similarNote) adj = this.adjacentFree(similarNote.position)
+    var adjacentPositions =
+      (this.itemsByNoteName[note.noteName] || [])
+      .map(function (cube) {
+        return this.adjacentFree(cube.position)
+      }.bind(this))
+    var adj = random(adjacentPositions)
     if (adj) return adj
 
     var freeRows = this.data.map(function (row, ix) {
@@ -95,6 +105,7 @@ Map.prototype = {
 
   reserve: function (pos, cube) {
     this.data[pos.y][pos.x] = cube
+    this.cubes.push(cube)
     this.itemsByNoteName[cube.note.noteName] = this.itemsByNoteName[cube.note.noteName] || []
     this.itemsByNoteName[cube.note.noteName].push(cube)
     this.itemsByNoteNumber[cube.note.noteNumber] = this.itemsByNoteNumber[cube.note.noteNumber] || []

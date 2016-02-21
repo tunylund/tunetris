@@ -3,7 +3,9 @@ module.exports = function (audioContext) {
   return new Promise(function (resolve, reject) {
 
     // workaround vendor syntaxes
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia
+    navigator.getUserMedia = navigator.getUserMedia ||
+                              navigator.webkitGetUserMedia ||
+                              navigator.mozGetUserMedia
 
     navigator.getUserMedia({
       'audio': {
@@ -23,7 +25,7 @@ module.exports = function (audioContext) {
       gainNode.gain.value = 5
       source.connect(gainNode)
 
-      resolve(source)
+      resolve(gainNode)
 
     }, reject)
 

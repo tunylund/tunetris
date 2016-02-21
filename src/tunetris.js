@@ -8,13 +8,14 @@ var soundSource = require('./audio/soundAudioSource')
 var oscillatorSource = require('./audio/oscillatorAudioSource')
 var micSource = require('./audio/micAudioSource')
 
-var pitchDetector = require('./audio/pitchDetector')
-var volumeMeter = require('./audio/volumeMeter')
+var PitchDetector = require('./audio/PitchDetector')
+var VolumeMeter = require('./audio/VolumeMeter')
 var WaveFormDebug = require('./visual/WaveFormDebug')
+var noteStrings = require('./audio/consts').noteStrings
 var Map = require('./visual/Map')
 
 var AudioContext = window.AudioContext || window.webkitAudioContext
-var noteStrings = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
+var audioContext = new AudioContext()
 
 function fillMap (scene, map) {
   map.data.map(function (row) {
@@ -27,67 +28,109 @@ function fillMap (scene, map) {
 }
 
 function tunetris () {
+
+  document.querySelector('.source-selector').addEventListener('click', function (e) {
+    switch (e.srcElement.value) {
+      case 'mic':
+        switchSource(micSource)
+        break
+
+      case 'url':
+        var url = window.prompt('What is the url of the audio file?')
+        switchSource(soundSource(url))
+        break
+
+      case 'oscillator':
+        switchSource(oscillatorSource)
+        break
+    }
+
+  })
+
+  var stop
+  function switchSource (source) {
+    if (stop) stop()
+    stop = null
+    source(audioContext)
+      .then(start)
+      .then(function (value) {
+        stop = value
+      })
+      .catch(window.alert)
+  }
+
+  switchSource(oscillatorSource)
+
+}
+
+function start (sourceNode) {
+
   var map = new Map(window.innerWidth, window.innerHeight, 32)
   var scene = new Scene(map)
 
-  var audioContext = new AudioContext()
+  // fillMap(scene.scene, map)
 
-  var pitchDebug = new PitchDebug()
-  document.body.appendChild(pitchDebug.el)
-
-  var pitchVisualiser = new PitchVisualiser(scene.scene, map)
-  document.body.appendChild(pitchVisualiser.el)
+  var pitchDebug = new PitchDebug(document)
+  var pitchVisualiser = new PitchVisualiser(scene.scene, map, document)
 
   var cleanNoteDetector = new CleanNoteDetector()
-
-  //fillMap(scene.scene, map)
-
   cleanNoteDetector.on('cleanNote', function (note) {
     var cube = map.addCube(note)
     if (cube) scene.scene.add(cube.mesh)
   })
 
-  soundSource(audioContext)
-    .then(function (sourceNode) {
+  var volumeMeter = new VolumeMeter(audioContext, sourceNode)
+  var pitchDetector = new PitchDetector(audioContext, sourceNode)
+  var waveFormDebug = new WaveFormDebug(audioContext, sourceNode, document)
 
-    var volume = volumeMeter(audioContext, sourceNode)
-    var pitchDetect = pitchDetector(audioContext, sourceNode)
+  var renderer = render(scene.scene, function () {
 
-    var waveFormDebug = new WaveFormDebug(audioContext, sourceNode)
-    document.body.appendChild(waveFormDebug.el)
+    var pitch = {
+      pitch: '',
+      noteNumber: 0,
+      noteName: '',
+      offset: 0
+    }
 
-    render(scene.scene, function () {
+    if (volumeMeter.volume > 0.05) {
+      pitch = pitchDetector.detect()
+    }
 
-      var pitch = {
-        pitch: '',
-        noteNumber: 0,
-        noteName: '',
-        offset: 0
-      }
+    pitch.volume = volumeMeter.volume
 
-      if (volume() > 0.05) {
-        pitch = pitchDetect()
-      }
+    waveFormDebug.step()
 
-      pitch.volume = volume()
+    scene.step()
 
-      waveFormDebug.step()
+    map.invoke(pitch, 'provoke')
 
-      scene.step()
+    cleanNoteDetector.setData(pitch)
+    cleanNoteDetector.step()
 
-      map.invoke(pitch, 'provoke')
+    pitchDebug.setData(pitch)
+    pitchDebug.step()
 
-      cleanNoteDetector.setData(pitch)
-      cleanNoteDetector.step()
+    pitchVisualiser.setData(pitch)
+    pitchVisualiser.step()
 
-      pitchDebug.setData(pitch)
-      pitchDebug.step()
+  }, map, window, document)
 
-      pitchVisualiser.setData(pitch)
-      pitchVisualiser.step()
+  renderer()
 
-    }, map)()
-  })
+  return function () {
+    renderer.destroy()
+    map.destroy()
+    scene.destroy()
+    pitchDebug.destroy()
+    pitchVisualiser.destroy()
+    cleanNoteDetector.destroy()
+    volumeMeter.destroy()
+    pitchDetector.destroy()
+    sourceNode.stop && sourceNode.stop()
+    sourceNode.disconnect()
+    renderer = map = scene = pitchDebug = pitchVisualiser = cleanNoteDetector = volumeMeter = pitchDetector = sourceNode = null
+  }
 
 }
+
 tunetris()
