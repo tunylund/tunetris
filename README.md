@@ -14,3 +14,8 @@ The mic input on mackbook pro is not very good. So getting enough audio data fro
 
 * uses three.js
 * uses detect-pitch.js
+
+```
+npm install
+npm run dev
+```

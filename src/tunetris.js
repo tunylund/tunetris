@@ -17,16 +17,6 @@ var Map = require('./visual/Map')
 var AudioContext = window.AudioContext || window.webkitAudioContext
 var audioContext = new AudioContext()
 
-function fillMap (scene, map) {
-  map.data.map(function (row) {
-    row.map(function (col, ix) {
-      var note = { noteName: noteStrings[ix % noteStrings.length] }
-      var cube = map.addCube(note)
-      if (cube) scene.add(cube.mesh)
-    })
-  })
-}
-
 function tunetris () {
 
   document.querySelector('.source-selector').addEventListener('click', function (e) {
@@ -43,18 +33,22 @@ function tunetris () {
       case 'oscillator':
         switchSource(oscillatorSource)
         break
+
+      case 'fill':
+        api && api.fillMap()
+        break
     }
 
   })
 
-  var stop
+  var api
   function switchSource (source) {
-    if (stop) stop()
-    stop = null
+    if (api) api.destroy()
+    api = null
     source(audioContext)
       .then(start)
-      .then(function (value) {
-        stop = value
+      .then(function (sceneApi) {
+        api = sceneApi
       })
       .catch(window.alert)
   }
@@ -67,8 +61,6 @@ function start (sourceNode) {
 
   var map = new Map(window.innerWidth, window.innerHeight, 32)
   var scene = new Scene(map)
-
-  // fillMap(scene.scene, map)
 
   var pitchDebug = new PitchDebug(document)
   var pitchVisualiser = new PitchVisualiser(scene.scene, map, document)
@@ -117,18 +109,32 @@ function start (sourceNode) {
 
   renderer()
 
-  return function () {
-    renderer.destroy()
-    map.destroy()
-    scene.destroy()
-    pitchDebug.destroy()
-    pitchVisualiser.destroy()
-    cleanNoteDetector.destroy()
-    volumeMeter.destroy()
-    pitchDetector.destroy()
-    sourceNode.stop && sourceNode.stop()
-    sourceNode.disconnect()
-    renderer = map = scene = pitchDebug = pitchVisualiser = cleanNoteDetector = volumeMeter = pitchDetector = sourceNode = null
+  return {
+
+    fillMap: function () {
+      map.data.map(function (row) {
+        row.map(function (col, ix) {
+          var note = { noteName: noteStrings[ix % noteStrings.length] }
+          var cube = map.addCube(note)
+          if (cube) scene.scene.add(cube.mesh)
+        })
+      })
+    },
+
+    destroy: function () {
+      renderer.destroy()
+      map.destroy()
+      scene.destroy()
+      pitchDebug.destroy()
+      pitchVisualiser.destroy()
+      cleanNoteDetector.destroy()
+      volumeMeter.destroy()
+      pitchDetector.destroy()
+      sourceNode.stop && sourceNode.stop()
+      sourceNode.disconnect()
+      renderer = map = scene = pitchDebug = pitchVisualiser = cleanNoteDetector = volumeMeter = pitchDetector = sourceNode = null
+    }
+
   }
 
 }

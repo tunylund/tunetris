@@ -12,12 +12,14 @@
   button {
     padding: 1em;
     border-radius: 0;
-    background-color: #eee;
+    background-color: transparent;
+    color: #fff;
     border: solid 1px #fff;
     cursor: pointer;
   }
   button:hover, button:focus {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
   }
   .source-selector {
     position: fixed;
@@ -55,6 +57,7 @@
     <button value="mic">Mic</button>
     <button value="url">Url</button>
     <button value="oscillator">Oscillator</button>
+    <button value="fill">Fill</button>
   </div>
   <script src="dist/vendor.bundle.js"></script>
   <script src="dist/bundle.js"></script>
