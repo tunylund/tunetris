@@ -49,7 +49,7 @@ function Scene (map) {
 
   this.clock = new three.Clock(true)
 
-  this.ambient = new three.HemisphereLight(0xffffff, 0x080808, 1)
+  this.ambient = new three.HemisphereLight(0xffffff, 0x686868, 1)
   this.scene.add(this.ambient)
 
   this.alight = new TravellingLight(0, 0, 0, map.data[0].length)

@@ -5,6 +5,10 @@ function dir () {
   return Math.random() > 0.5 ? 1 : -1
 }
 
+function choose (a, b) {
+  return Math.random() > 0.5 ? a : b
+}
+
 function Cube (note, position) {
   this.note = note
   this.position = position
@@ -16,9 +20,7 @@ function Cube (note, position) {
 
   var material = new three.MeshLambertMaterial({ color: color })
   this.mesh = new three.Mesh(geometry, material)
-  this.mesh.position.x = position.x
-  this.mesh.position.y = position.y
-  this.mesh.position.z = position.z
+  this.revert()
 }
 
 Cube.prototype.destroy = function () {
@@ -39,7 +41,7 @@ Cube.prototype.provoke = function () {
 Cube.prototype.revert = function () {
   this.mesh.position.x = this.position.x
   this.mesh.position.y = this.position.y
-  this.mesh.position.z = this.position.z
+  this.mesh.position.z = this.position.z - 1
 }
 
 Cube.prototype.step = function () {}

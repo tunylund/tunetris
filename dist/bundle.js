@@ -443,7 +443,7 @@ webpackJsonp([0],[
 
 	  this.clock = new three.Clock(true)
 
-	  this.ambient = new three.HemisphereLight(0xffffff, 0x080808, 1)
+	  this.ambient = new three.HemisphereLight(0xffffff, 0x686868, 1)
 	  this.scene.add(this.ambient)
 
 	  this.alight = new TravellingLight(0, 0, 0, map.data[0].length)
@@ -894,6 +894,10 @@ webpackJsonp([0],[
 	  return Math.random() > 0.5 ? 1 : -1
 	}
 
+	function choose (a, b) {
+	  return Math.random() > 0.5 ? a : b
+	}
+
 	function Cube (note, position) {
 	  this.note = note
 	  this.position = position
@@ -905,9 +909,7 @@ webpackJsonp([0],[
 
 	  var material = new three.MeshLambertMaterial({ color: color })
 	  this.mesh = new three.Mesh(geometry, material)
-	  this.mesh.position.x = position.x
-	  this.mesh.position.y = position.y
-	  this.mesh.position.z = position.z
+	  this.revert()
 	}
 
 	Cube.prototype.destroy = function () {
@@ -928,7 +930,7 @@ webpackJsonp([0],[
 	Cube.prototype.revert = function () {
 	  this.mesh.position.x = this.position.x
 	  this.mesh.position.y = this.position.y
-	  this.mesh.position.z = this.position.z
+	  this.mesh.position.z = this.position.z - 1
 	}
 
 	Cube.prototype.step = function () {}
