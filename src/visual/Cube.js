@@ -12,6 +12,7 @@ function choose (a, b) {
 function Cube (note, position) {
   this.note = note
   this.position = position
+  this.scale = 1
 
   var geometry = new three.BoxGeometry(0.8, 0.8, 0.15)
 
@@ -41,7 +42,7 @@ Cube.prototype.provoke = function () {
 Cube.prototype.revert = function () {
   this.mesh.position.x = this.position.x
   this.mesh.position.y = this.position.y
-  this.mesh.position.z = this.position.z - 1
+  this.mesh.position.z = this.position.z - 0.5
 }
 
 Cube.prototype.step = function () {}

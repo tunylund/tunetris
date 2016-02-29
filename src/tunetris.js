@@ -112,13 +112,16 @@ function start (sourceNode) {
   return {
 
     fillMap: function () {
-      map.data.map(function (row) {
-        row.map(function (col, ix) {
-          var note = { noteName: noteStrings[ix % noteStrings.length] }
-          var cube = map.addCube(note)
-          if (cube) scene.scene.add(cube.mesh)
-        })
-      })
+      var i = 0
+      var l = map.data.length * map.data[0].length
+      function next () {
+        i++
+        var note = { noteName: noteStrings[i % noteStrings.length] }
+        var cube = map.addCube(note)
+        if (cube) scene.scene.add(cube.mesh)
+        if (i < l) requestAnimationFrame(next)
+      }
+      requestAnimationFrame(next)
     },
 
     destroy: function () {

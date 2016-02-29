@@ -74,6 +74,9 @@ Map.prototype = {
       .map(function (cube) {
         return this.adjacentFree(cube.position)
       }.bind(this))
+      .filter(function (pos) {
+        return !!pos
+      })
     var adj = random(adjacentPositions)
     if (adj) return adj
 
